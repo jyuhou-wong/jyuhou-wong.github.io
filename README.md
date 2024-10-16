@@ -1,3 +1,5 @@
-# Hexo GitHub Repository
+# Hexo GitHub Pages Repository
 
-This is the initial commit.
+[Preview](https://blog.hyh.ltd)
+
+This is my blog released by using [hexo-github](https://github.com/jyuhou-wong/hexo-github) vscode extensions.
