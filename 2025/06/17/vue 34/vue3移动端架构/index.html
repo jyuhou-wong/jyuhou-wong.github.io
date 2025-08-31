@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>vue3移动端架构 | Hexo Blog (Created by VSCode Hexo GitHub Plugin)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="🌐 Modern Vue 3 Frontend Architecture (Using Yarn)本架构适用于基于 Vite 构建的 Vue 3 前端项目，使用 Yarn 作为包管理工具，结合自动导入、自动组件注册、状态管理、路由、API 拦截、样式体系与代码规范，实现高性能与可维护性的现代化开发流程。   🧩 目录结构1234567891011121314151617181920212223">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue3移动端架构">
+<meta property="og:url" content="http://blog.hyh.ltd/2025/06/17/vue%2034/vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo Blog (Created by VSCode Hexo GitHub Plugin)">
+<meta property="og:description" content="🌐 Modern Vue 3 Frontend Architecture (Using Yarn)本架构适用于基于 Vite 构建的 Vue 3 前端项目，使用 Yarn 作为包管理工具，结合自动导入、自动组件注册、状态管理、路由、API 拦截、样式体系与代码规范，实现高性能与可维护性的现代化开发流程。   🧩 目录结构1234567891011121314151617181920212223">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://uml.planttext.com/plantuml/png/NLHDZvim4BtpAqPxw8SQUjaUgzNIXEwY9WI1sUsgwS4B4zOAsCWstQAg_xqs9X1wYUAPDuzvpmzkbQPITqtjgHFZBPMqWPOM9rfXfliQGMAXAQzgz6eyQj029AjUD9JCTfZWdZVYuUfBn-eIta1ITnNZwWh-U00_7fZ60t_dcbg8UWNtk_JzJw0A7Y8IMap7ss76fvqMFcjQ8RMP2UOJ14cat52GatsqI_OfMOp-wj0lX05pv5gTfoLMJ6cKCBSSotflAE8m9fdtzqB3MaY4hyO6V1NoT9RG8LmV-DfIA6PLstLMy5aLahKQ5EgklN6Ayl1wGPXfgX5sb9jJOnu_KYQCCthWEr5sDPN6DDAtw2jwn84cYU8eiBZMulnHOejIMJMbigH6eYC_btc1JbiIfbcKaSKUgUWqunLalK4s5y9im_ZpwS0tFQSDAq3QYbh1NKTbgGR6T9-JC5qGvX5isREaiZ-JKQujpKuyCvESoN2e7Spv4yJaFtzip1PR4ShgLyPBM6VPWUUQrKpt_f59fU43R52nYWCH9-HkEH94sySetYncnn0Qauv2DaQDxbjHITg-z2j0NNnqLf77P9lVHV4o1UPsOKjxbED6mMyc35N4ZLC5jbf8PQuiHJsg2hv7-oK3CK6t67D3lBGsZanXjcNSoaWaQirG3lEc6iL3d0SxQWCPwXbvseRdrdsdJhsPj5tV9A32SW3Tvzct9_lmjyQR5dbfWi1GUVRb0j-_SPcSJXUlprIxU1ayYnwABeF3hpkFgPeHOohcmd2xyt6wcFCVLvqidv7Em7cXqP3fF1inbPnixzO8jj-lVm00">
+<meta property="article:published_time" content="2025-06-17T07:18:45.000Z">
+<meta property="article:modified_time" content="2025-06-17T07:53:43.783Z">
+<meta property="article:author" content="Kevin Wong">
+<meta property="article:tag" content="hexo, vscode, github, blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://uml.planttext.com/plantuml/png/NLHDZvim4BtpAqPxw8SQUjaUgzNIXEwY9WI1sUsgwS4B4zOAsCWstQAg_xqs9X1wYUAPDuzvpmzkbQPITqtjgHFZBPMqWPOM9rfXfliQGMAXAQzgz6eyQj029AjUD9JCTfZWdZVYuUfBn-eIta1ITnNZwWh-U00_7fZ60t_dcbg8UWNtk_JzJw0A7Y8IMap7ss76fvqMFcjQ8RMP2UOJ14cat52GatsqI_OfMOp-wj0lX05pv5gTfoLMJ6cKCBSSotflAE8m9fdtzqB3MaY4hyO6V1NoT9RG8LmV-DfIA6PLstLMy5aLahKQ5EgklN6Ayl1wGPXfgX5sb9jJOnu_KYQCCthWEr5sDPN6DDAtw2jwn84cYU8eiBZMulnHOejIMJMbigH6eYC_btc1JbiIfbcKaSKUgUWqunLalK4s5y9im_ZpwS0tFQSDAq3QYbh1NKTbgGR6T9-JC5qGvX5isREaiZ-JKQujpKuyCvESoN2e7Spv4yJaFtzip1PR4ShgLyPBM6VPWUUQrKpt_f59fU43R52nYWCH9-HkEH94sySetYncnn0Qauv2DaQDxbjHITg-z2j0NNnqLf77P9lVHV4o1UPsOKjxbED6mMyc35N4ZLC5jbf8PQuiHJsg2hv7-oK3CK6t67D3lBGsZanXjcNSoaWaQirG3lEc6iL3d0SxQWCPwXbvseRdrdsdJhsPj5tV9A32SW3Tvzct9_lmjyQR5dbfWi1GUVRb0j-_SPcSJXUlprIxU1ayYnwABeF3hpkFgPeHOohcmd2xyt6wcFCVLvqidv7Em7cXqP3fF1inbPnixzO8jj-lVm00">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo Blog (Created by VSCode Hexo GitHub Plugin)" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo Blog (Created by VSCode Hexo GitHub Plugin)</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Powered by VSCode Hexo GitHub</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.hyh.ltd"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-vue 34/vue3移动端架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/06/17/vue%2034/vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2025-06-17T07:18:45.000Z" itemprop="datePublished">2025-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      vue3移动端架构
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="🌐-Modern-Vue-3-Frontend-Architecture-Using-Yarn"><a href="#🌐-Modern-Vue-3-Frontend-Architecture-Using-Yarn" class="headerlink" title="🌐 Modern Vue 3 Frontend Architecture (Using Yarn)"></a>🌐 Modern Vue 3 Frontend Architecture (Using Yarn)</h1><p>本架构适用于基于 Vite 构建的 Vue 3 前端项目，使用 Yarn 作为包管理工具，结合自动导入、自动组件注册、状态管理、路由、API 拦截、样式体系与代码规范，实现高性能与可维护性的现代化开发流程。</p>
+<p><img src="https://uml.planttext.com/plantuml/png/NLHDZvim4BtpAqPxw8SQUjaUgzNIXEwY9WI1sUsgwS4B4zOAsCWstQAg_xqs9X1wYUAPDuzvpmzkbQPITqtjgHFZBPMqWPOM9rfXfliQGMAXAQzgz6eyQj029AjUD9JCTfZWdZVYuUfBn-eIta1ITnNZwWh-U00_7fZ60t_dcbg8UWNtk_JzJw0A7Y8IMap7ss76fvqMFcjQ8RMP2UOJ14cat52GatsqI_OfMOp-wj0lX05pv5gTfoLMJ6cKCBSSotflAE8m9fdtzqB3MaY4hyO6V1NoT9RG8LmV-DfIA6PLstLMy5aLahKQ5EgklN6Ayl1wGPXfgX5sb9jJOnu_KYQCCthWEr5sDPN6DDAtw2jwn84cYU8eiBZMulnHOejIMJMbigH6eYC_btc1JbiIfbcKaSKUgUWqunLalK4s5y9im_ZpwS0tFQSDAq3QYbh1NKTbgGR6T9-JC5qGvX5isREaiZ-JKQujpKuyCvESoN2e7Spv4yJaFtzip1PR4ShgLyPBM6VPWUUQrKpt_f59fU43R52nYWCH9-HkEH94sySetYncnn0Qauv2DaQDxbjHITg-z2j0NNnqLf77P9lVHV4o1UPsOKjxbED6mMyc35N4ZLC5jbf8PQuiHJsg2hv7-oK3CK6t67D3lBGsZanXjcNSoaWaQirG3lEc6iL3d0SxQWCPwXbvseRdrdsdJhsPj5tV9A32SW3Tvzct9_lmjyQR5dbfWi1GUVRb0j-_SPcSJXUlprIxU1ayYnwABeF3hpkFgPeHOohcmd2xyt6wcFCVLvqidv7Em7cXqP3fF1inbPnixzO8jj-lVm00" alt="uml"></p>
+<hr>
+<h2 id="🧩-目录结构"><a href="#🧩-目录结构" class="headerlink" title="🧩 目录结构"></a>🧩 目录结构</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">my-vue-app/</span><br><span class="line">├── public/</span><br><span class="line">│   └── index.html</span><br><span class="line">├── src/</span><br><span class="line">│   ├── api/</span><br><span class="line">│   │   └── index.ts</span><br><span class="line">│   ├── assets/</span><br><span class="line">│   │   └── main.css</span><br><span class="line">│   ├── components/</span><br><span class="line">│   ├── hooks/</span><br><span class="line">│   ├── router/</span><br><span class="line">│   │   └── index.ts</span><br><span class="line">│   ├── store/</span><br><span class="line">│   │   ├── index.ts</span><br><span class="line">│   │   └── user.ts</span><br><span class="line">│   ├── styles/</span><br><span class="line">│   ├── utils/</span><br><span class="line">│   ├── views/</span><br><span class="line">│   │   └── Home.vue</span><br><span class="line">│   ├── App.vue</span><br><span class="line">│   └── main.ts</span><br><span class="line">├── .eslintrc.js</span><br><span class="line">├── .prettierrc</span><br><span class="line">├── tailwind.config.js</span><br><span class="line">└── vite.config.ts</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="⏳-开发思路与生命周期"><a href="#⏳-开发思路与生命周期" class="headerlink" title="⏳ 开发思路与生命周期"></a>⏳ 开发思路与生命周期</h2><ol>
+<li><strong>构建阶段</strong>：使用 Vite + Yarn 快速创建项目与安装依赖。</li>
+<li><strong>运行时初始化</strong>：<code>main.ts</code> 中创建 Vue 应用，注入 Pinia、Router、Tailwind、Axios 等模块。</li>
+<li><strong>组件结构组织</strong>：<code>hooks/</code>、<code>components/</code>、<code>store/</code>、<code>views/</code>、<code>api/</code> 等分区构成清晰的模块划分。</li>
+<li><strong>路由管理</strong>：采用 Vue Router 4 实现懒加载与权限校验（Navigation Guards）。</li>
+<li><strong>状态管理</strong>：使用 Pinia + 持久化插件管理全局状态。</li>
+<li><strong>API 通信</strong>：创建 Axios 实例，在 <code>api/</code> 中统一编写接口调用。</li>
+<li><strong>样式体系</strong>：Tailwind CSS 实现原子化样式，集中管理设计变量。</li>
+<li><strong>开发规范</strong>：配置 ESLint、Prettier、Stylelint，结合 Husky 与 lint-staged 实现提交前自动检查。</li>
+</ol>
+<hr>
+<h2 id="🔧-手把手搭建步骤（Yarn-版）"><a href="#🔧-手把手搭建步骤（Yarn-版）" class="headerlink" title="🔧 手把手搭建步骤（Yarn 版）"></a>🔧 手把手搭建步骤（Yarn 版）</h2><h3 id="1-初始化项目"><a href="#1-初始化项目" class="headerlink" title="1. 初始化项目"></a>1. 初始化项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yarn create vite my-vue-app --template vue-ts</span><br><span class="line"><span class="built_in">cd</span> my-vue-app</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Yarn 的 <code>create vite</code> 命令能快速创建 Vue 项目，支持框架选择和模板配置 (<a target="_blank" rel="noopener" href="https://classic.yarnpkg.com/en/package/create-vite?utm_source=chatgpt.com" title="create-vite | Yarn">classic.yarnpkg.com</a>, <a target="_blank" rel="noopener" href="https://vuejs.org/guide/quick-start?utm_source=chatgpt.com" title="Quick Start - Vue.js">vuejs.org</a>)。</p>
+</blockquote>
+<h3 id="2-安装依赖"><a href="#2-安装依赖" class="headerlink" title="2. 安装依赖"></a>2. 安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yarn</span><br><span class="line">yarn add vue-router@4 pinia pinia-plugin-persistedstate axios vant</span><br><span class="line">yarn add -D tailwindcss postcss autoprefixer \</span><br><span class="line">  unplugin-auto-import unplugin-vue-components \</span><br><span class="line">  eslint prettier stylelint husky lint-staged</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-配置-Vite-插件"><a href="#3-配置-Vite-插件" class="headerlink" title="3. 配置 Vite 插件"></a>3. 配置 Vite 插件</h3><p>在 <code>vite.config.ts</code> 中配置自动导入与组件注册：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;vite&#x27;</span></span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&#x27;@vitejs/plugin-vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">AutoImport</span> <span class="keyword">from</span> <span class="string">&#x27;unplugin-auto-import/vite&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Components</span> <span class="keyword">from</span> <span class="string">&#x27;unplugin-vue-components/vite&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">VantResolver</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;unplugin-vue-components/resolvers&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="title function_">vue</span>(),</span><br><span class="line">    <span class="title class_">AutoImport</span>(&#123;</span><br><span class="line">      <span class="attr">imports</span>: [<span class="string">&#x27;vue&#x27;</span>, <span class="string">&#x27;vue-router&#x27;</span>, <span class="string">&#x27;pinia&#x27;</span>],</span><br><span class="line">      <span class="attr">dts</span>: <span class="string">&#x27;src/auto-imports.d.ts&#x27;</span>,</span><br><span class="line">      <span class="attr">vueTemplate</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="title class_">Components</span>(&#123;</span><br><span class="line">      <span class="attr">dirs</span>: [<span class="string">&#x27;src/components&#x27;</span>],</span><br><span class="line">      <span class="attr">resolvers</span>: [<span class="title class_">VantResolver</span>()],</span><br><span class="line">      <span class="attr">dts</span>: <span class="string">&#x27;src/components.d.ts&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">resolve</span>: &#123; <span class="attr">alias</span>: &#123; <span class="string">&#x27;@&#x27;</span>: <span class="string">&#x27;/src&#x27;</span> &#125; &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-初始化-Tailwind"><a href="#4-初始化-Tailwind" class="headerlink" title="4. 初始化 Tailwind"></a>4. 初始化 Tailwind</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx tailwindcss init -p</span><br></pre></td></tr></table></figure>
+
+<p>配置 <code>tailwind.config.js</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">content</span>: [<span class="string">&#x27;./index.html&#x27;</span>, <span class="string">&#x27;./src/**/*.&#123;vue,ts,js&#125;&#x27;</span>],</span><br><span class="line">  <span class="attr">theme</span>: &#123; <span class="attr">extend</span>: &#123; <span class="attr">colors</span>: &#123; <span class="attr">primary</span>: <span class="string">&#x27;#1E88E5&#x27;</span> &#125; &#125; &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="built_in">require</span>(<span class="string">&#x27;@tailwindcss/forms&#x27;</span>),</span><br><span class="line">    <span class="built_in">require</span>(<span class="string">&#x27;@tailwindcss/typography&#x27;</span>),</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-修改主入口-main-ts"><a href="#5-修改主入口-main-ts" class="headerlink" title="5. 修改主入口 main.ts"></a>5. 修改主入口 <code>main.ts</code></h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; createPinia &#125; <span class="keyword">from</span> <span class="string">&#x27;pinia&#x27;</span></span><br><span class="line"><span class="keyword">import</span> piniaPluginPersistedstate <span class="keyword">from</span> <span class="string">&#x27;pinia-plugin-persistedstate&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; createRouter, createWebHistory &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> routes <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;vant/es/index/style&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./assets/main.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> pinia = <span class="title function_">createPinia</span>()</span><br><span class="line">pinia.<span class="title function_">use</span>(piniaPluginPersistedstate)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createRouter</span>(&#123; <span class="attr">history</span>: <span class="title function_">createWebHistory</span>(), routes &#125;)</span><br><span class="line"></span><br><span class="line"><span class="title function_">createApp</span>(<span class="title class_">App</span>).<span class="title function_">use</span>(pinia).<span class="title function_">use</span>(router).<span class="title function_">mount</span>(<span class="string">&#x27;#app&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-补充目录代码"><a href="#6-补充目录代码" class="headerlink" title="6. 补充目录代码"></a>6. 补充目录代码</h3><ul>
+<li><p><strong>Router</strong> (<code>src/router/index.ts</code>):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;@/views/Home.vue&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="attr">component</span>: <span class="title class_">Home</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&#x27;/about&#x27;</span>, <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@/views/About.vue&#x27;</span>) &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Store</strong> (<code>src/store/user.ts</code>):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineStore &#125; <span class="keyword">from</span> <span class="string">&#x27;pinia&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useUserStore = <span class="title function_">defineStore</span>(<span class="string">&#x27;user&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">state</span>: <span class="function">() =&gt;</span> (&#123; <span class="attr">token</span>: <span class="string">&#x27;&#x27;</span> &#125;),</span><br><span class="line">  <span class="attr">persist</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">actions</span>: &#123; <span class="title function_">setToken</span>(<span class="params"><span class="attr">t</span>: <span class="built_in">string</span></span>) &#123; <span class="variable language_">this</span>.<span class="property">token</span> = t &#125; &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>API</strong> (<code>src/api/index.ts</code>):</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> api = axios.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">baseURL</span>: <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">VITE_API_URL</span>,</span><br><span class="line">  <span class="attr">timeout</span>: <span class="number">10000</span>,</span><br><span class="line">&#125;)</span><br><span class="line">api.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="function"><span class="params">cfg</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> t = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="string">&#x27;token&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (t) cfg.<span class="property">headers</span>.<span class="property">Authorization</span> = <span class="string">`Bearer <span class="subst">$&#123;t&#125;</span>`</span></span><br><span class="line">  <span class="keyword">return</span> cfg</span><br><span class="line">&#125;)</span><br><span class="line">api.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="property">data</span>, <span class="function"><span class="params">err</span> =&gt;</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(err))</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="7-设置代码规范与提交检查"><a href="#7-设置代码规范与提交检查" class="headerlink" title="7. 设置代码规范与提交检查"></a>7. 设置代码规范与提交检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx husky-init &amp;&amp; yarn</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>package.json</code> 中加入：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;lint-staged&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;*.&#123;ts,vue&#125;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eslint --fix&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;*.&#123;css,scss&#125;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;stylelint --fix&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>完成后每次提交时自动格式化代码。</p>
+<h3 id="8-启动开发"><a href="#8-启动开发" class="headerlink" title="8. 启动开发"></a>8. 启动开发</h3><p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn dev</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://localhost:5173，自动导入、组件注册、状态持久、API">http://localhost:5173，自动导入、组件注册、状态持久、API</a> 拦截、样式系统均已生效。</p>
+<hr>
+<h2 id="✅-总结"><a href="#✅-总结" class="headerlink" title="✅ 总结"></a>✅ 总结</h2><ul>
+<li><strong>Yarn</strong> 提供快速依赖安装与缓存能力，是项目推荐选择。</li>
+<li>Vue 官方支持 <code>yarn create vue</code> 和 <code>yarn create vite</code> 初始化。</li>
+<li>提供完整生产与开发流程：从初始化、代码组织、模块注册、规范检测到项目启动。</li>
+<li>完整生命周期覆盖构建→开发→提交保护。</li>
+</ul>
+<p>可以复制本模块作为项目模板，或生成 README 与部署脚本。如有其它需求，欢迎继续交流！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.hyh.ltd/2025/06/17/vue%2034/vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84/" data-id="cmf059bf90033ins0846kck0x" data-title="vue3移动端架构" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2025/06/17/vue%2034/vue3-mobile-scaffold%20%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          vue3-mobile-scaffold 模板说明
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2025/06/14/flutter/flutter%20%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">flutter 开发思路</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ddd/" rel="tag">ddd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feature-first/" rel="tag">feature-first</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flutter/" rel="tag">flutter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/ddd/" style="font-size: 10px;">ddd</a> <a href="/tags/feature-first/" style="font-size: 10px;">feature-first</a> <a href="/tags/flutter/" style="font-size: 10px;">flutter</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/06/">June 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/09/next-technology/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">前端开发流程</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/08/MoonAI-Web%20v1_0_0%20%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/">MoonAI-Web v1.0.0 前端开发总结</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/%E8%AE%B0%E5%BD%95vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B/">记录vue3移动端框架搭建过程</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/vue3-mobile-scaffold%20%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/">vue3-mobile-scaffold 模板说明</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84/">vue3移动端架构</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 Kevin Wong<br>
+      Powered by <a href="https://github.com/jyuhou-wong/vscode-hexo-github" target="_blank">Hexo GitHub</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>flutter ddd feature first 开发最佳实践 | Hexo Blog (Created by VSCode Hexo GitHub Plugin)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="基于 分离 + CodeGen 映射 的最佳实践开发流程，涵盖从领域建模到 DTO、映射、仓库实现、UseCase、ViewModel、UI，再到各层单元／集成测试和 CI 集成。按此流程，既能保持清晰分层，又能用工具最大化减少样板、提高维护效率。 一、领域层（Domain）定义实体（Entity）和值对象（Value Object）12345678910111213141516&#x2F;&#x2F; lib&#x2F;fe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flutter ddd feature first 开发最佳实践">
+<meta property="og:url" content="http://blog.hyh.ltd/2025/06/14/flutter/flutter%20ddd%20feature%20first%20%E5%BC%80%E5%8F%91%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="Hexo Blog (Created by VSCode Hexo GitHub Plugin)">
+<meta property="og:description" content="基于 分离 + CodeGen 映射 的最佳实践开发流程，涵盖从领域建模到 DTO、映射、仓库实现、UseCase、ViewModel、UI，再到各层单元／集成测试和 CI 集成。按此流程，既能保持清晰分层，又能用工具最大化减少样板、提高维护效率。 一、领域层（Domain）定义实体（Entity）和值对象（Value Object）12345678910111213141516&#x2F;&#x2F; lib&#x2F;fe">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-14T10:39:33.000Z">
+<meta property="article:modified_time" content="2025-06-14T10:41:30.716Z">
+<meta property="article:author" content="Kevin Wong">
+<meta property="article:tag" content="flutter">
+<meta property="article:tag" content="ddd">
+<meta property="article:tag" content="best-practices">
+<meta property="article:tag" content="feature-first">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo Blog (Created by VSCode Hexo GitHub Plugin)" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo Blog (Created by VSCode Hexo GitHub Plugin)</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Powered by VSCode Hexo GitHub</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.hyh.ltd"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-flutter/flutter ddd feature first 开发最佳实践" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/06/14/flutter/flutter%20ddd%20feature%20first%20%E5%BC%80%E5%8F%91%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="article-date">
+  <time class="dt-published" datetime="2025-06-14T10:39:33.000Z" itemprop="datePublished">2025-06-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      flutter ddd feature first 开发最佳实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>基于 分离 + CodeGen 映射 的最佳实践开发流程，涵盖从领域建模到 DTO、映射、仓库实现、UseCase、ViewModel、UI，再到各层单元／集成测试和 CI 集成。按此流程，既能保持清晰分层，又能用工具最大化减少样板、提高维护效率。</p>
+<h2 id="一、领域层（Domain）"><a href="#一、领域层（Domain）" class="headerlink" title="一、领域层（Domain）"></a>一、领域层（Domain）</h2><h3 id="定义实体（Entity）和值对象（Value-Object）"><a href="#定义实体（Entity）和值对象（Value-Object）" class="headerlink" title="定义实体（Entity）和值对象（Value Object）"></a>定义实体（Entity）和值对象（Value Object）</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/features/members/domain/entities/member_entity.dart</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemberEntity</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> name;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> accountId;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> accountRole;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int</span> accountStatus;</span><br><span class="line"></span><br><span class="line">  MemberEntity(&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">this</span>.name,</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">this</span>.accountId,</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">this</span>.accountRole,</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">this</span>.accountStatus,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">bool</span> <span class="keyword">get</span> isActive =&gt; accountStatus == <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义领域请求／响应模型"><a href="#定义领域请求／响应模型" class="headerlink" title="定义领域请求／响应模型"></a>定义领域请求／响应模型</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/features/members/domain/entities/member_update_item.dart</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemberUpdateItem</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int?</span> accountStatus;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int?</span> resetPassword;</span><br><span class="line">  MemberUpdateItem(&#123;<span class="keyword">this</span>.accountStatus, <span class="keyword">this</span>.resetPassword&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// lib/features/members/domain/entities/member_creation_request.dart</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ManagerCreationInfo</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> accountId, name;</span><br><span class="line">  <span class="comment">/*…*/</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SupportCreationInfo</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int</span> createNum;</span><br><span class="line">  <span class="comment">/*…*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定义仓库接口"><a href="#定义仓库接口" class="headerlink" title="定义仓库接口"></a>定义仓库接口</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/features/members/domain/repositories/member_repository.dart</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MemberRepository</span> </span>&#123;</span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; fetchTeamMembers(<span class="built_in">int</span> teamId);</span><br><span class="line">  Future&lt;<span class="built_in">bool</span>&gt; updateMemberStatus(<span class="built_in">String</span> accountId, MemberUpdateItem item);</span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; createTeamMembers(&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">int</span> teamId,</span><br><span class="line">    ManagerCreationInfo? manager,</span><br><span class="line">    SupportCreationInfo? support,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、数据层（Data-Infrastructure）"><a href="#二、数据层（Data-Infrastructure）" class="headerlink" title="二、数据层（Data &#x2F; Infrastructure）"></a>二、数据层（Data &#x2F; Infrastructure）</h2><h3 id="1-定义-DTO（只做-JSON-序列化）"><a href="#1-定义-DTO（只做-JSON-序列化）" class="headerlink" title="1. 定义 DTO（只做 JSON 序列化）"></a>1. 定义 DTO（只做 JSON 序列化）</h3><p>在 <code>lib/features/members/data/dto/</code> 下，用 <code>@JsonSerializable(fieldRename: FieldRename.snake)</code>：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// member_dto.dart</span></span><br><span class="line"><span class="meta">@JsonSerializable</span>(fieldRename: FieldRename.snake)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemberDto</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> name;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> accountId;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> accountRole;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int</span> accountStatus;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">factory</span> MemberDto.fromJson(<span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">dynamic</span>&gt; json) =&gt; _$MemberDtoFromJson(json);</span><br><span class="line">  <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">dynamic</span>&gt; toJson() =&gt; _$MemberDtoToJson(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同理定义 <code>MemberUpdateItemDto</code>, <code>ManagerCreationInfoDto</code>, <code>SupportCreationInfoDto</code>, <code>MemberCreationResponseDto</code> 等。</p>
+<h3 id="2-生成序列化代码"><a href="#2-生成序列化代码" class="headerlink" title="2. 生成序列化代码"></a>2. 生成序列化代码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter pub run build_runner build --delete-conflicting-outputs</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-写-Mapper-Extension（DTO-→-Entity）"><a href="#3-写-Mapper-Extension（DTO-→-Entity）" class="headerlink" title="3. 写 Mapper Extension（DTO → Entity）"></a>3. 写 Mapper Extension（DTO → Entity）</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/features/members/data/mappers/member_mapper.dart</span></span><br><span class="line"><span class="keyword">extension</span> MemberDtoX <span class="keyword">on</span> MemberDto &#123;</span><br><span class="line">  MemberEntity toEntity() =&gt; MemberEntity(</span><br><span class="line">    name: name,</span><br><span class="line">    accountId: accountId,</span><br><span class="line">    accountRole: accountRole,</span><br><span class="line">    accountStatus: accountStatus,</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extension</span> MemberCreationResponseDtoX <span class="keyword">on</span> MemberCreationResponseDto &#123;</span><br><span class="line">  <span class="built_in">List</span>&lt;MemberEntity&gt; toMemberEntities() &#123;</span><br><span class="line">    <span class="keyword">final</span> out = &lt;MemberEntity&gt;[];</span><br><span class="line">    <span class="keyword">if</span> (manager != <span class="keyword">null</span>) out.add(manager!.toMemberEntity());</span><br><span class="line">    <span class="keyword">if</span> (support != <span class="keyword">null</span>) out.addAll(support!.toMemberEntities());</span><br><span class="line">    <span class="keyword">return</span> out;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、仓库实现（RepositoryImpl）"><a href="#三、仓库实现（RepositoryImpl）" class="headerlink" title="三、仓库实现（RepositoryImpl）"></a>三、仓库实现（RepositoryImpl）</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/features/members/data/repositories/member_repository_impl.dart</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemberRepositoryImpl</span> <span class="keyword">implements</span> <span class="title">MemberRepository</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> MCRequestManager _api;</span><br><span class="line">  MemberRepositoryImpl(<span class="keyword">this</span>._api);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; fetchTeamMembers(<span class="built_in">int</span> teamId) <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> res = <span class="keyword">await</span> _api.getTeamMemberListAsync(teamId);</span><br><span class="line">    <span class="keyword">final</span> dtos = (res[<span class="string">&#x27;members&#x27;</span>] <span class="keyword">as</span> <span class="built_in">List</span>)</span><br><span class="line">      .map((e) =&gt; MemberDto.fromJson(e)).toList();</span><br><span class="line">    <span class="keyword">return</span> dtos.map((d) =&gt; d.toEntity()).toList();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Future&lt;<span class="built_in">bool</span>&gt; updateMemberStatus(<span class="built_in">String</span> accountId, MemberUpdateItem item) <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> dto = MemberUpdateItemDto(</span><br><span class="line">      accountStatus: item.accountStatus, resetPassword: item.resetPassword);</span><br><span class="line">    <span class="keyword">await</span> _api.updateTeamMemberAsync(accountId, dto.toJson());</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; createTeamMembers(&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">int</span> teamId,</span><br><span class="line">    ManagerCreationInfo? manager,</span><br><span class="line">    SupportCreationInfo? support,</span><br><span class="line">  &#125;) <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> managerDto = manager != <span class="keyword">null</span></span><br><span class="line">      ? ManagerCreationInfoDto(accountId: manager.accountId, name: manager.name)</span><br><span class="line">      : <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">final</span> supportDto = support != <span class="keyword">null</span></span><br><span class="line">      ? SupportCreationInfoDto(createNum: support.createNum)</span><br><span class="line">      : <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> data = <span class="keyword">await</span> _api.createTeamMemberAsync(</span><br><span class="line">      teamId,</span><br><span class="line">      manager: managerDto?.toJson(),</span><br><span class="line">      support: supportDto?.toJson(),</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">final</span> respDto = MemberCreationResponseDto.fromJson(data);</span><br><span class="line">    <span class="keyword">return</span> respDto.toMemberEntities();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、应用层（Application）"><a href="#四、应用层（Application）" class="headerlink" title="四、应用层（Application）"></a>四、应用层（Application）</h2><p>为每个业务场景写 UseCase。</p>
+<h3 id="1-LoadMembersUseCase"><a href="#1-LoadMembersUseCase" class="headerlink" title="1. LoadMembersUseCase"></a>1. LoadMembersUseCase</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoadMembersUseCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> MemberRepository _repo;</span><br><span class="line">  LoadMembersUseCase(<span class="keyword">this</span>._repo);</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; execute(<span class="built_in">int</span> teamId) =&gt;</span><br><span class="line">    _repo.fetchTeamMembers(teamId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-UpdateMemberStatusUseCase"><a href="#2-UpdateMemberStatusUseCase" class="headerlink" title="2. UpdateMemberStatusUseCase"></a>2. UpdateMemberStatusUseCase</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdateMemberStatusUseCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> MemberRepository _repo;</span><br><span class="line">  UpdateMemberStatusUseCase(<span class="keyword">this</span>._repo);</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">bool</span>&gt; execute(<span class="built_in">String</span> accountId, <span class="built_in">int</span> newStatus) =&gt;</span><br><span class="line">    _repo.updateMemberStatus(accountId, MemberUpdateItem(accountStatus: newStatus));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-CreateMembersUseCase"><a href="#3-CreateMembersUseCase" class="headerlink" title="3. CreateMembersUseCase"></a>3. CreateMembersUseCase</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreateMembersUseCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> MemberRepository _repo;</span><br><span class="line">  CreateMembersUseCase(<span class="keyword">this</span>._repo);</span><br><span class="line"></span><br><span class="line">  Future&lt;<span class="built_in">List</span>&lt;MemberEntity&gt;&gt; execute(&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="built_in">int</span> teamId,</span><br><span class="line">    ManagerCreationInfo? manager,</span><br><span class="line">    SupportCreationInfo? support,</span><br><span class="line">  &#125;) =&gt; _repo.createTeamMembers(teamId: teamId, manager: manager, support: support);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、表现层（Presentation）"><a href="#五、表现层（Presentation）" class="headerlink" title="五、表现层（Presentation）"></a>五、表现层（Presentation）</h2><h3 id="1-State-ViewModel"><a href="#1-State-ViewModel" class="headerlink" title="1. State + ViewModel"></a>1. State + ViewModel</h3><p>定义状态类和 <code>StateNotifier</code>，注入 UseCase。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MembersState</span> </span>&#123; <span class="comment">/* status, list, error */</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MembersViewModel</span> <span class="keyword">extends</span> <span class="title">StateNotifier</span>&lt;<span class="title">MembersState</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> LoadMembersUseCase _load;</span><br><span class="line">  <span class="keyword">final</span> UpdateMemberStatusUseCase _update;</span><br><span class="line">  <span class="keyword">final</span> CreateMembersUseCase _create;</span><br><span class="line">  MembersViewModel(<span class="keyword">this</span>._load, <span class="keyword">this</span>._update, <span class="keyword">this</span>._create) : <span class="keyword">super</span>(MembersState());</span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; load(<span class="built_in">int</span> teamId) <span class="keyword">async</span> &#123; <span class="comment">/*…*/</span> &#125;</span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; update(<span class="built_in">String</span> id, <span class="built_in">int</span> status) <span class="keyword">async</span> &#123; <span class="comment">/*…*/</span> &#125;</span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; create(&#123;…&#125;) <span class="keyword">async</span> &#123; <span class="comment">/*…*/</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Provider-注册"><a href="#2-Provider-注册" class="headerlink" title="2. Provider 注册"></a>2. Provider 注册</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> loadUseCaseProvider = Provider((ref) =&gt; LoadMembersUseCase(ref.read(repo)));</span><br><span class="line"><span class="keyword">final</span> viewModelProvider = StateNotifierProvider.family&lt;MembersViewModel, MembersState, <span class="built_in">int</span>&gt;((ref, teamId) =&gt; MembersViewModel(</span><br><span class="line">  ref.read(loadUseCaseProvider),</span><br><span class="line">  ref.read(updateUseCaseProvider),</span><br><span class="line">  ref.read(createUseCaseProvider),</span><br><span class="line">)..load(teamId));</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Widget-调用"><a href="#3-Widget-调用" class="headerlink" title="3. Widget 调用"></a>3. Widget 调用</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MembersPage</span> <span class="keyword">extends</span> <span class="title">ConsumerWidget</span> </span>&#123;</span><br><span class="line">  Widget build(...) &#123;</span><br><span class="line">    <span class="keyword">final</span> state = ref.watch(viewModelProvider(teamId));</span><br><span class="line">    ref.listen(viewModelProvider(teamId), (_, s) &#123; <span class="keyword">if</span> (s.isError) showError(...); &#125;);</span><br><span class="line">    <span class="keyword">return</span> state.isLoading ? Loading() : CustomTable(items: state.list, ...);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、测试策略"><a href="#六、测试策略" class="headerlink" title="六、测试策略"></a>六、测试策略</h2><h3 id="1-单元测试（UseCase-Mapper-ViewModel）"><a href="#1-单元测试（UseCase-Mapper-ViewModel）" class="headerlink" title="1. 单元测试（UseCase&#x2F;Mapper&#x2F;ViewModel）"></a>1. 单元测试（UseCase&#x2F;Mapper&#x2F;ViewModel）</h3><ul>
+<li><strong>UseCase</strong>：用 Mockito 生成 <code>MockMemberRepository</code>，测试 <code>execute</code> 成功／失败分支。</li>
+<li><strong>Mapper</strong>：给一个 DTO 测 <code>dto.toEntity()</code> 输出符合预期。</li>
+<li><strong>ViewModel</strong>：用 <code>ProviderContainer</code> override UseCase Provider，驱动 state 变化测试。</li>
+</ul>
+<h3 id="2-集成测试（RepositoryImpl）"><a href="#2-集成测试（RepositoryImpl）" class="headerlink" title="2. 集成测试（RepositoryImpl）"></a>2. 集成测试（RepositoryImpl）</h3><p>在专门的测试环境上跑 <code>MemberRepositoryImpl.fetchTeamMembers</code> 等方法，验证真实 API、JSON 解析、映射流程。</p>
+<h3 id="3-CI-集成"><a href="#3-CI-集成" class="headerlink" title="3. CI 集成"></a>3. CI 集成</h3><ul>
+<li><strong>阶段 1</strong>：CI 每次提交 <code>flutter test --coverage</code>，跑单元测试。</li>
+<li><strong>阶段 2</strong>：定时或手动触发少量集成测试，保证后端兼容。</li>
+<li><strong>阶段 3</strong>：可选 E2E&#x2F;UI 测试，保证整个用户流畅。</li>
+</ul>
+<h2 id="七、工具-脚本"><a href="#七、工具-脚本" class="headerlink" title="七、工具 &amp; 脚本"></a>七、工具 &amp; 脚本</h2><ul>
+<li><strong>CodeGen</strong>：<code>build_runner</code> + <code>json_serializable</code> +（可选）<code>dart_mappable</code></li>
+<li><strong>Mock</strong>：<code>mockito</code> + <code>build_runner</code></li>
+<li><strong>Lint &amp; CI</strong>：确保 <code>build_runner build</code> 无报错，所有测试覆盖率可观。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.hyh.ltd/2025/06/14/flutter/flutter%20ddd%20feature%20first%20%E5%BC%80%E5%8F%91%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" data-id="cmf059bfb0039ins0gapobfwa" data-title="flutter ddd feature first 开发最佳实践" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ddd/" rel="tag">ddd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/feature-first/" rel="tag">feature-first</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flutter/" rel="tag">flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2025/06/14/flutter/flutter%20%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          flutter 开发思路
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/10/29/plugins/vscode/Hexo-GitHub%20VSCode%20Plugin/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hexo-GitHub VSCode Plugin</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ddd/" rel="tag">ddd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/feature-first/" rel="tag">feature-first</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flutter/" rel="tag">flutter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/ddd/" style="font-size: 10px;">ddd</a> <a href="/tags/feature-first/" style="font-size: 10px;">feature-first</a> <a href="/tags/flutter/" style="font-size: 10px;">flutter</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/07/">July 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/06/">June 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2025/07/09/next-technology/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">前端开发流程</a>
+          </li>
+        
+          <li>
+            <a href="/2025/07/08/MoonAI-Web%20v1_0_0%20%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/">MoonAI-Web v1.0.0 前端开发总结</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/%E8%AE%B0%E5%BD%95vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B/">记录vue3移动端框架搭建过程</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/vue3-mobile-scaffold%20%E6%A8%A1%E6%9D%BF%E8%AF%B4%E6%98%8E/">vue3-mobile-scaffold 模板说明</a>
+          </li>
+        
+          <li>
+            <a href="/2025/06/17/vue%2034/vue3%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84/">vue3移动端架构</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2025 Kevin Wong<br>
+      Powered by <a href="https://github.com/jyuhou-wong/vscode-hexo-github" target="_blank">Hexo GitHub</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
